@@ -211,51 +211,61 @@ public class Buscaminas {
 
     public static void asignarValorCelda(int fila, int columna) {
 
-        int maximo = numFilas*numColumnas;
+        int maximo = numFilas*numColumnas; //Indicamos el máximo de celdas que se van a poder introducir a los arrays de posiciones
 
+
+        //Guardamos dos array, guardan las posiciones (fila-columna) de las celdas que aún no han sido procesadas.
         int[] filasPendientes = new int[maximo];
         int[] columnasPendientes = new int[maximo];
 
+        //Es el número de celdas que hay por revisar, empieza siendo 1, porque es la celda seleccionada.
         int celdasPendientes = 1;
 
+        //Añadimos la posición de nuestra celda seleccionada a la lista de celdas pendientes.
         filasPendientes[0] = fila;
         columnasPendientes[0] = columna;
 
+
+        //Condicional que comprueba que la celda seleccionada sea una bomba, en ese caso, su valor será "*" y terminará la función
         if (matrizReal[fila][columna].equals("*")) matrizVisible[fila][columna] = "*";
+
+        //De lo contrario...
         else {
 
+            //Utilizo este for para recorrer todas las celdas pendientes de procesar, empezando por la 0 (La celda seleccionada) y acabando cuando no queden más celdas
             for(int indice = 0; indice < celdasPendientes; indice++ ) {
 
-
-
+                //Variables para tener la celda que se procesará en este momento
                 int filaActual = filasPendientes[indice];
                 int columnaActual = columnasPendientes[indice];
 
+                //Inicializamos el contador de bombas, que servirá para saber cuantas bombas tiene la celda al rededor (si es que tiene)
                 int contadorBombas = 0;
 
-
+                //Recorremos las 8 celdas que hay al rededor de nuestra celda actual
                 for (int i = filaActual -1; i <= filaActual +1; i++) {
                     for (int j = columnaActual -1; j <= columnaActual +1 ; j++) {
 
-                        if (i < 0 || i >= numFilas || j < 0 || j >= numColumnas) continue;
+                        if (i < 0 || i >= numFilas || j < 0 || j >= numColumnas) continue; //Si la posición de la celda no está en el tablero, ignoramos el caso y pasamos al siguiente
 
-                        if (matrizReal[i][j].equals("*")) contadorBombas++;
-
+                        if (matrizReal[i][j].equals("*")) contadorBombas++; //Si la celda que estamos revisando contiene bomba, el contador de bombas se sumará en uno
                     }
                 }
 
-                if (contadorBombas != 0) {
-                    matrizVisible[filaActual][columnaActual] = Integer.toString(contadorBombas);
-                } else {
+                if (contadorBombas != 0) { //Si el contador de bombas no es 0 (Por lo que, hay por lo menos una bomba)
+                    matrizVisible[filaActual][columnaActual] = Integer.toString(contadorBombas); //Nuestra celda actual, tendrá como valor contadorBombas
+                } else { //De lo contrario...
 
-                    matrizVisible[filaActual][columnaActual] = "-";
+                    matrizVisible[filaActual][columnaActual] = "-"; //La celda actual será un "-", porque no tiene bombas al rededor.
 
+                    //Volvemos a recorrer sus 8 celdas vecinas, pero esta vez para añadirlas a los arrays de pendientes
                     for (int i = filaActual -1; i <= filaActual +1; i++) {
                         for (int j = columnaActual -1; j <= columnaActual +1 ; j++) {
 
-                            if (i < 0 || i >= numFilas || j < 0 || j >= numColumnas) continue;
+                            if (i < 0 || i >= numFilas || j < 0 || j >= numColumnas) continue; //Volvemos a comprobar que la celda no esté fuera del rango
 
-                            if (matrizVisible[i][j].equals("X")) {
+
+                            if (matrizVisible[i][j].equals("X")) { //En caso de que la celda que estamos revisando sea "X", añadimos su posición a los arrays (Porque significa que aún no la hemos procesado)
                                 filasPendientes[celdasPendientes] = i;
                                 columnasPendientes[celdasPendientes] = j;
                                 celdasPendientes++;
