@@ -13,7 +13,6 @@ public class Buscaminas {
 
     public static String[][] matrizReal;
 
-
     static int numFilas = 0;
     static int numColumnas = 0;
     static int celdasPorDescubrir = 0;
